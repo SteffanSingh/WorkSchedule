@@ -2,7 +2,7 @@ import re
 import calendar
 import random
 import os
-import  datetime
+import datetime
 
 
 
@@ -125,15 +125,15 @@ def schedule_app():
     day_names = list(calendar.day_name)
     data = str(help())
     input_data = data.split("-")
-    day = int(input_data[2])
-    year_month = "-".join(input_data[:2])
     emp_dict = employee_dic_data()
     emp_all = []
-    separator = '-'
+    date = datetime.datetime.strptime(data, "%Y-%m-%d")
+    next_seven_days = [date + datetime.timedelta(days=i) for i in range(0, 7)]
+    next_seven_days_formatted = [day.strftime("%Y-%m-%d") for day in next_seven_days]
     for key, value in emp_dict.items():
         emp_all.append(key)
     assigned_employees = []
-    for day_name in day_names:
+    for i,day_name in enumerate(day_names):
         employees = []
         for key, value in emp_dict.items():
             if day_name[:3] in value:
@@ -142,19 +142,17 @@ def schedule_app():
         if employees:
             employee = random.choice(employees)
             assigned_employees.append(employee)
-            day = 1 if day > 31 else day
-            print(f"{separator.join([year_month, str(day)])} ({day_name[:3]}): {employee}")
+            print(f"{next_seven_days_formatted[i]} ({day_name[:3]}): {employee}")
         else:
             employee = random.choice(emp_all)
             assigned_employees.append(employee)
-            day = 1 if day > 31 else day
-            print(f"{separator.join([year_month, str(day)])} ({day_name[:3]}): {employee}")
-        day += 1
-        print("                         ")
+            print(f"{next_seven_days_formatted[i]} ({day_name[:3]}): {employee}")
+        print("\n")
     print(f"Warning: no available employees for Tuesday, assigned {assigned_employees[1]}.")
     print(f"Warning: no available employees for Saturday, assigned {assigned_employees[5]}.\n")
     print("Goodbye !\n")
     print("************************************************\n")
+
 
 
 def main():
